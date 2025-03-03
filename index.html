@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHQ-9 Depression Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: aqua;
+            text-align: center;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            max-width: 500px;
+            margin: auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s;
+        }
+        .dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+        .dark-mode .container {
+            background: #1e1e1e;
+            color: white;
+        }
+        h2 {
+            color: #333;
+        }
+        .question {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .options label {
+            display: block;
+            margin: 5px 0;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #ddd;
+            height: 20px;
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        .progress {
+            height: 100%;
+            width: 0;
+            background-color: #28a745;
+            transition: width 0.5s;
+        }
+        #links {
+            margin-top: 15px;
+        }
+        #language-selector {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>PHQ-9 Depression Test</h2>
+        <p><small>(Mental Health Screening)</small></p>
+        <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
+
+        <div id="language-selector">
+            <label for="languages">Choose Language:</label>
+            <select id="languages" onchange="changeLanguage()">
+                <option value="en">English</option>
+                <option value="th">ไทย</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="zh">中文</option>
+                <option value="ar">العربية</option>
+            </select>
+        </div>
+
+        <form id="phq9-form">
+            <div id="questions"></div>
+            <button type="button" onclick="calculateScore()">Get Result</button>
+        </form>
+
+        <div id="result"></div>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+
+        <button onclick="shareResult()">📤 Share Result on Twitter</button>
+
+        <div id="links">
+            <p>🔗 Resources for mental health support:</p>
+            <a href="https://www.who.int/mental_health/en/" target="_blank">WHO Mental Health</a>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { en: "Little interest or pleasure in doing things", th: "เบื่อ ไม่สนใจทำอะไรเลย", es: "Poco interés o placer en hacer cosas", fr: "Peu d'intérêt ou de plaisir à faire des choses", de: "Wenig Interesse oder Freude an Dingen", zh: "对做事情缺乏兴趣或乐趣", ar: "قليل من الاهتمام أو المتعة في القيام بالأشياء" },
+            { en: "Feeling down, depressed, or hopeless", th: "รู้สึกหดหู่ ซึมเศร้า หรือหมดหวัง", es: "Sentirse decaído, deprimido o desesperado", fr: "Se sentir déprimé, déprimé ou sans espoir", de: "Sich niedergeschlagen, depressiv oder hoffnungslos fühlen", zh: "感到沮丧、抑郁或绝望", ar: "الشعور بالحزن أو الاكتئاب أو اليأس" },
+            { en: "Trouble falling or staying asleep, or sleeping too much", th: "หลับยาก หรือหลับมากเกินไป", es: "Dificultad para quedarse dormido o dormir demasiado", fr: "Difficulté à s'endormir ou à rester endormi, ou trop dormir", de: "Schwierigkeiten beim Einschlafen oder Durchschlafen oder zu viel Schlaf", zh: "难以入睡或睡得太多", ar: "صعوبة في النوم أو البقاء نائماً، أو النوم كثيراً" },
+            { en: "Feeling tired or having little energy", th: "รู้สึกเหนื่อยง่าย หรือไม่มีพลังงาน", es: "Sentirse cansado o tener poca energía", fr: "Se sentir fatigué ou avoir peu d'énergie", de: "Sich müde fühlen oder wenig Energie haben", zh: "感到疲倦或缺乏精力", ar: "الشعور بالتعب أو قلة الطاقة" },
+            { en: "Poor appetite or overeating", th: "เบื่ออาหาร หรือกินมากเกินไป", es: "Poca apetito o comer en exceso", fr: "Appétit pauvre ou trop manger", de: "Schlechte Appetit oder übermäßiges Essen", zh: "食欲不振或暴饮暴食", ar: "فقدان الشهية أو الإفراط في الأكل" },
+            { en: "Feeling bad about yourself - or that you are a failure", th: "รู้สึกแย่กับตัวเอง คิดว่าตัวเองล้มเหลว", es: "Sentirse mal consigo mismo - o que eres un fracaso", fr: "Se sentir mal dans sa peau - ou que l'on est un échec", de: "Sich schlecht fühlen oder denken, dass man ein Versager ist", zh: "对自己感到不好 - 或觉得自己是失败者", ar: "الشعور بالسوء تجاه نفسك - أو أنك فاشل" },
+            { en: "Trouble concentrating on things", th: "มีปัญหาด้านสมาธิ เช่น อ่านหนังสือแล้วไม่โฟกัส", es: "Dificultad para concentrarse en las cosas", fr: "Difficulté à se concentrer sur les choses", de: "Schwierigkeiten, sich auf Dinge zu konzentrieren", zh: "难以集中注意力", ar: "صعوبة في التركيز على الأشياء" },
+            { en: "Moving or speaking so slowly that other people notice", th: "เคลื่อนไหวช้าลง หรือกระสับกระส่ายจนคนอื่นสังเกตเห็น", es: "Moverse o hablar tan lentamente que otras personas lo notan", fr: "Se déplacer ou parler si lentement que les autres s'en rendent compte", de: "So langsam bewegen oder sprechen, dass es anderen auffällt", zh: "动作或说话太慢，别人注意到", ar: "الحركة أو الكلام ببطء لدرجة أن الآخرين يلاحظون" },
+            { en: "Thoughts that you would be better off dead", th: "คิดทำร้ายตัวเอง หรือคิดว่าควรตาย", es: "Pensamientos de que estarías mejor muerto", fr: "Des pensées que vous seriez mieux mort", de: "Gedanken, dass es besser wäre, tot zu sein", zh: "有死去的想法", ar: "أفكار تفيد أنك ستكون أفضل حالاً لو مت" }
+        ];
+
+        const options = [
+            { text: "Not at all", value: 0 },
+            { text: "Several days", value: 1 },
+            { text: "More than half the days", value: 2 },
+            { text: "Nearly every day", value: 3 }
+        ];
+
+        function loadQuestions(language = 'en') {
+            const questionContainer = document.getElementById("questions");
+            questionContainer.innerHTML = "";  // Clear existing questions
+            questions.forEach((q, index) => {
+                let questionHTML = `<div class="question"><strong>${index + 1}. ${q[language]}</strong>`;
+                questionHTML += `<div class="options">`;
+                options.forEach(opt => {
+                    questionHTML += `<label><input type="radio" name="q${index}" value="${opt.value}"> ${opt.text}</label>`;
+                });
+                questionHTML += `</div></div>`;
+                questionContainer.innerHTML += questionHTML;
+            });
+        }
+
+        function calculateScore() {
+            let score = 0;
+            let form = document.getElementById("phq9-form");
+            questions.forEach((_, index) => {
+                let answer = form.querySelector(`input[name="q${index}"]:checked`);
+                if (answer) {
+                    score += parseInt(answer.value);
+                }
+            });
+            displayResult(score);
+        }
+
+        function displayResult(score) {
+            let resultText = `Your score: ${score}`;
+            document.getElementById("result").innerText = resultText;
+            let progressBar = document.getElementById("progress");
+            let progressWidth = (score / 27) * 100;
+            progressBar.style.width = progressWidth + "%";
+        }
+
+        function shareResult() {
+            const resultText = encodeURIComponent(document.getElementById("result").innerText);
+            const url = `https://twitter.com/intent/tweet?text=${resultText}`;
+            window.open(url, "_blank");
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+        }
+
+        function changeLanguage() {
+            const language = document.getElementById("languages").value;
+            loadQuestions(language);
+        }
+
+        // Initial load
+        loadQuestions();
+    </script>
+</body>
+</html>
