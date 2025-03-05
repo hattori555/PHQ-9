@@ -94,6 +94,13 @@
                 <option value="de">Deutsch</option>
                 <option value="zh">中文</option>
                 <option value="ar">العربية</option>
+                <option value="it">Italiano</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+                <option value="ru">Русский</option>
+                <option value="pt">Português</option>
+                <option value="nl">Nederlands</option>
+                <option value="pl">Polski</option>
             </select>
         </div>
 
@@ -113,79 +120,245 @@
             <p>🔗 Resources for mental health support:</p>
             <a href="https://www.who.int/mental_health/en/" target="_blank">WHO Mental Health</a>
         </div>
+
+        <!-- New Button and Explanation for Human Rights -->
+        <button onclick="showHumanRightsExplanation()">📖 Learn About Human Rights & Mental Health</button>
+
+        <div id="humanRightsExplanation" style="display:none; margin-top: 15px;">
+            <p>Access to mental health care is a fundamental human right. It allows individuals to recognize and address mental health issues, ensuring that everyone has the right to well-being and adequate care. By providing accessible mental health screening services, we contribute to upholding human rights.</p>
+        </div>
     </div>
 
     <script>
-        const questions = [
-            { en: "Little interest or pleasure in doing things", th: "เบื่อ ไม่สนใจทำอะไรเลย", es: "Poco interés o placer en hacer cosas", fr: "Peu d'intérêt ou de plaisir à faire des choses", de: "Wenig Interesse oder Freude an Dingen", zh: "对做事情缺乏兴趣或乐趣", ar: "قليل من الاهتمام أو المتعة في القيام بالأشياء" },
-            { en: "Feeling down, depressed, or hopeless", th: "รู้สึกหดหู่ ซึมเศร้า หรือหมดหวัง", es: "Sentirse decaído, deprimido o desesperado", fr: "Se sentir déprimé, déprimé ou sans espoir", de: "Sich niedergeschlagen, depressiv oder hoffnungslos fühlen", zh: "感到沮丧、抑郁或绝望", ar: "الشعور بالحزن أو الاكتئاب أو اليأس" },
-            { en: "Trouble falling or staying asleep, or sleeping too much", th: "หลับยาก หรือหลับมากเกินไป", es: "Dificultad para quedarse dormido o dormir demasiado", fr: "Difficulté à s'endormir ou à rester endormi, ou trop dormir", de: "Schwierigkeiten beim Einschlafen oder Durchschlafen oder zu viel Schlaf", zh: "难以入睡或睡得太多", ar: "صعوبة في النوم أو البقاء نائماً، أو النوم كثيراً" },
-            { en: "Feeling tired or having little energy", th: "รู้สึกเหนื่อยง่าย หรือไม่มีพลังงาน", es: "Sentirse cansado o tener poca energía", fr: "Se sentir fatigué ou avoir peu d'énergie", de: "Sich müde fühlen oder wenig Energie haben", zh: "感到疲倦或缺乏精力", ar: "الشعور بالتعب أو قلة الطاقة" },
-            { en: "Poor appetite or overeating", th: "เบื่ออาหาร หรือกินมากเกินไป", es: "Poca apetito o comer en exceso", fr: "Appétit pauvre ou trop manger", de: "Schlechte Appetit oder übermäßiges Essen", zh: "食欲不振或暴饮暴食", ar: "فقدان الشهية أو الإفراط في الأكل" },
-            { en: "Feeling bad about yourself - or that you are a failure", th: "รู้สึกแย่กับตัวเอง คิดว่าตัวเองล้มเหลว", es: "Sentirse mal consigo mismo - o que eres un fracaso", fr: "Se sentir mal dans sa peau - ou que l'on est un échec", de: "Sich schlecht fühlen oder denken, dass man ein Versager ist", zh: "对自己感到不好 - 或觉得自己是失败者", ar: "الشعور بالسوء تجاه نفسك - أو أنك فاشل" },
-            { en: "Trouble concentrating on things", th: "มีปัญหาด้านสมาธิ เช่น อ่านหนังสือแล้วไม่โฟกัส", es: "Dificultad para concentrarse en las cosas", fr: "Difficulté à se concentrer sur les choses", de: "Schwierigkeiten, sich auf Dinge zu konzentrieren", zh: "难以集中注意力", ar: "صعوبة في التركيز على الأشياء" },
-            { en: "Moving or speaking so slowly that other people notice", th: "เคลื่อนไหวช้าลง หรือกระสับกระส่ายจนคนอื่นสังเกตเห็น", es: "Moverse o hablar tan lentamente que otras personas lo notan", fr: "Se déplacer ou parler si lentement que les autres s'en rendent compte", de: "So langsam bewegen oder sprechen, dass es anderen auffällt", zh: "动作或说话太慢，别人注意到", ar: "الحركة أو الكلام ببطء لدرجة أن الآخرين يلاحظون" },
-            { en: "Thoughts that you would be better off dead", th: "คิดทำร้ายตัวเอง หรือคิดว่าควรตาย", es: "Pensamientos de que estarías mejor muerto", fr: "Des pensées que vous seriez mieux mort", de: "Gedanken, dass es besser wäre, tot zu sein", zh: "有死去的想法", ar: "أفكار تفيد أنك ستكون أفضل حالاً لو مت" }
-        ];
+        const questions = {
+            en: [
+                "Little interest or pleasure in doing things",
+                "Feeling down, depressed, or hopeless",
+                "Trouble falling or staying asleep, or sleeping too much",
+                "Feeling tired or having little energy",
+                "Poor appetite or overeating",
+                "Feeling bad about yourself - or that you are a failure",
+                "Trouble concentrating on things",
+                "Moving or speaking so slowly that other people notice",
+                "Thoughts that you would be better off dead"
+            ],
+            th: [
+                "เบื่อ ไม่สนใจทำอะไรเลย",
+                "รู้สึกหดหู่ ซึมเศร้า หรือหมดหวัง",
+                "หลับยาก หรือหลับมากเกินไป",
+                "รู้สึกเหนื่อยง่าย หรือไม่มีพลังงาน",
+                "เบื่ออาหาร หรือกินมากเกินไป",
+                "รู้สึกแย่กับตัวเอง คิดว่าตัวเองล้มเหลว",
+                "มีปัญหาด้านสมาธิ เช่น อ่านหนังสือแล้วไม่โฟกัส",
+                "เคลื่อนไหวช้าลง หรือกระสับกระส่ายจนคนอื่นสังเกตเห็น",
+                "คิดทำร้ายตัวเอง หรือคิดว่าควรตาย"
+            ],
+            es: [
+                "Poco interés o placer en hacer cosas",
+                "Sentirse decaído, deprimido o desesperado",
+                "Dificultad para quedarse dormido o dormir demasiado",
+                "Sentirse cansado o tener poca energía",
+                "Poca apetito o comer en exceso",
+                "Sentirse mal consigo mismo - o que eres un fracaso",
+                "Dificultad para concentrarse en las cosas",
+                "Moverse o hablar tan lentamente que otras personas lo notan",
+                "Pensamientos de que estarías mejor muerto"
+            ],
+            fr: [
+                "Peu d'intérêt ou de plaisir à faire des choses",
+                "Se sentir déprimé, triste ou sans espoir",
+                "Difficulté à s'endormir ou à rester endormi, ou dormir trop",
+                "Se sentir fatigué ou avoir peu d'énergie",
+                "Manque d'appétit ou trop manger",
+                "Se sentir mal dans sa peau - ou penser que l'on est un échec",
+                "Difficulté à se concentrer sur des choses",
+                "Bouger ou parler si lentement que d'autres le remarquent",
+                "Des pensées qu'il vaudrait mieux être mort"
+            ],
+            de: [
+                "Wenig Interesse oder Freude an Dingen",
+                "Sich niedergeschlagen, depressiv oder hoffnungslos fühlen",
+                "Schwierigkeiten beim Einschlafen oder Durchschlafen, oder zu viel Schlaf",
+                "Sich müde fühlen oder wenig Energie haben",
+                "Schlechter Appetit oder übermäßiges Essen",
+                "Sich schlecht fühlen - oder denken, man sei ein Versager",
+                "Schwierigkeiten, sich zu konzentrieren",
+                "Langsam sprechen oder sich so bewegen, dass es anderen auffällt",
+                "Gedanken, dass es besser wäre, tot zu sein"
+            ],
+            zh: [
+                "对做事情没有兴趣或乐趣",
+                "感到沮丧、忧郁或绝望",
+                "入睡或保持睡眠困难，或睡得太多",
+                "感到疲倦或精力不足",
+                "食欲不振或暴饮暴食",
+                "对自己感到糟糕——或者觉得自己是个失败者",
+                "集中注意力困难",
+                "移动或说话缓慢，以至于其他人注意到",
+                "觉得自己最好死了"
+            ],
+            ar: [
+                "قليل من الاهتمام أو المتعة في القيام بالأشياء",
+                "الشعور بالحزن أو الاكتئاب أو اليأس",
+                "مشكلة في النوم أو البقاء نائماً، أو النوم كثيراً",
+                "الشعور بالتعب أو عدم وجود طاقة",
+                "فقدان الشهية أو الإفراط في تناول الطعام",
+                "الشعور بالسوء تجاه نفسك - أو أنك فاشل",
+                "صعوبة في التركيز على الأشياء",
+                "التحدث أو التحرك ببطء لدرجة أن الآخرين يلاحظون ذلك",
+                "أفكار بأنك ستكون أفضل حالاً لو مت"
+            ],
+            it: [
+                "Poco interesse o piacere nel fare le cose",
+                "Sentirsi giù, depressi o senza speranza",
+                "Difficoltà ad addormentarsi o a rimanere addormentati, o dormire troppo",
+                "Sentirsi stanchi o avere poca energia",
+                "Poco appetito o mangiare troppo",
+                "Sentirsi male con se stessi - o pensare di essere un fallimento",
+                "Difficoltà a concentrarsi sulle cose",
+                "Muoversi o parlare così lentamente che gli altri lo notano",
+                "Pensieri che sarebbe meglio essere morti"
+            ],
+            ja: [
+                "物事に対する興味や喜びがない",
+                "気分が落ち込んでいる、憂鬱または絶望的である",
+                "眠れない、または過度に寝すぎている",
+                "疲れている、またはエネルギーがない",
+                "食欲がない、または食べすぎ",
+                "自分に対して悪い気がする - または失敗者だと思う",
+                "物事に集中するのが難しい",
+                "他の人が気づくほどゆっくり話したり動いたりする",
+                "死んだほうがましだと思う"
+            ],
+            ko: [
+                "일을 할 때 흥미나 즐거움이 없음",
+                "우울하거나 절망적인 기분",
+                "잠이 잘 오지 않거나 너무 많이 자는 경우",
+                "피곤하거나 에너지가 부족한 느낌",
+                "식욕이 없거나 과식하는 경우",
+                "자신에게 나쁜 기분이 듦 - 또는 실패자라고 느끼는 경우",
+                "집중하는 데 어려움이 있음",
+                "다른 사람들이 알 수 있을 정도로 느리게 움직이거나 말하는 경우",
+                "죽는 것이 더 나을 것 같은 생각"
+            ],
+            ru: [
+                "Малый интерес или удовольствие от вещей",
+                "Чувство подавленности, депрессии или безнадежности",
+                "Трудности с засыпанием или поддержанием сна, или слишком много сна",
+                "Чувство усталости или нехватки энергии",
+                "Плохой аппетит или переедание",
+                "Чувство плохого отношения к себе – или мысль о том, что ты неудачник",
+                "Трудности с концентрацией на вещах",
+                "Двигаешься или говоришь так медленно, что другие замечают",
+                "Мысли о том, что было бы лучше умереть"
+            ],
+            pt: [
+                "Pouco interesse ou prazer em fazer coisas",
+                "Sentir-se para baixo, deprimido ou sem esperança",
+                "Dificuldade para dormir ou dormir demais",
+                "Sentir-se cansado ou sem energia",
+                "Falta de apetite ou comer demais",
+                "Sentir-se mal consigo mesmo - ou achar que é um fracasso",
+                "Dificuldade para se concentrar nas coisas",
+                "Mover-se ou falar tão devagar que outras pessoas percebem",
+                "Pensamentos de que seria melhor estar morto"
+            ],
+            nl: [
+                "Weinig interesse of plezier in dingen doen",
+                "Zich neerslachtig, depressief of hopeloos voelen",
+                "Moeite met in slaap vallen of te veel slapen",
+                "Zich moe voelen of weinig energie hebben",
+                "Slecht eetlust of te veel eten",
+                "Zich slecht voelen over zichzelf - of denken dat je een mislukking bent",
+                "Moeite met concentreren op dingen",
+                "Zo langzaam bewegen of spreken dat anderen het opmerken",
+                "Gedachten dat je beter dood zou zijn"
+            ],
+            pl: [
+                "Niewielka przyjemność lub zainteresowanie rzeczami",
+                "Czucie się przygnębionym, depresyjnym lub beznadziejnym",
+                "Trudności z zasypianiem lub zbyt długim snem",
+                "Czucie się zmęczonym lub pozbawionym energii",
+                "Brak apetytu lub objadanie się",
+                "Czucie się źle ze sobą - lub myślenie, że się nie udało",
+                "Problemy z koncentracją",
+                "Poruszanie się lub mówienie tak wolno, że inni to zauważają",
+                "Myśli, że lepiej by było, gdybyś nie żył"
+            ]
+        };
 
-        const options = [
-            { text: "Not at all", value: 0 },
-            { text: "Several days", value: 1 },
-            { text: "More than half the days", value: 2 },
-            { text: "Nearly every day", value: 3 }
-        ];
+        let currentLanguage = "en";
 
-        function loadQuestions(language = 'en') {
+        function renderQuestions() {
             const questionContainer = document.getElementById("questions");
-            questionContainer.innerHTML = "";  // Clear existing questions
-            questions.forEach((q, index) => {
-                let questionHTML = `<div class="question"><strong>${index + 1}. ${q[language]}</strong>`;
-                questionHTML += `<div class="options">`;
-                options.forEach(opt => {
-                    questionHTML += `<label><input type="radio" name="q${index}" value="${opt.value}"> ${opt.text}</label>`;
-                });
-                questionHTML += `</div></div>`;
-                questionContainer.innerHTML += questionHTML;
+            questionContainer.innerHTML = '';
+            questions[currentLanguage].forEach((question, index) => {
+                const div = document.createElement("div");
+                div.className = "question";
+                div.innerHTML = `
+                    <label>${index + 1}. ${question}</label>
+                    <div class="options">
+                        <label><input type="radio" name="q${index}" value="0"> Not at all</label>
+                        <label><input type="radio" name="q${index}" value="1"> Several days</label>
+                        <label><input type="radio" name="q${index}" value="2"> More than half the days</label>
+                        <label><input type="radio" name="q${index}" value="3"> Nearly every day</label>
+                    </div>
+                `;
+                questionContainer.appendChild(div);
             });
+        }
+
+        function changeLanguage() {
+            currentLanguage = document.getElementById("languages").value;
+            renderQuestions();
         }
 
         function calculateScore() {
             let score = 0;
-            let form = document.getElementById("phq9-form");
-            questions.forEach((_, index) => {
-                let answer = form.querySelector(`input[name="q${index}"]:checked`);
-                if (answer) {
-                    score += parseInt(answer.value);
-                }
-            });
-            displayResult(score);
-        }
+            const form = document.forms["phq9-form"];
+            for (let i = 0; i < questions[currentLanguage].length; i++) {
+                const questionScore = form[`q${i}`]?.value;
+                if (questionScore) score += parseInt(questionScore);
+            }
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = `Your total score is: ${score}`;
 
-        function displayResult(score) {
-            let resultText = `Your score: ${score}`;
-            document.getElementById("result").innerText = resultText;
-            let progressBar = document.getElementById("progress");
-            let progressWidth = (score / 27) * 100;
-            progressBar.style.width = progressWidth + "%";
-        }
+            let scoreExplanation = "";
+            if (score <= 4) {
+                scoreExplanation = "Your score suggests minimal or no depression.";
+            } else if (score <= 9) {
+                scoreExplanation = "Your score suggests mild depression.";
+            } else if (score <= 14) {
+                scoreExplanation = "Your score suggests moderate depression.";
+            } else if (score <= 19) {
+                scoreExplanation = "Your score suggests moderately severe depression.";
+            } else {
+                scoreExplanation = "Your score suggests severe depression.";
+            }
 
-        function shareResult() {
-            const resultText = encodeURIComponent(document.getElementById("result").innerText);
-            const url = `https://twitter.com/intent/tweet?text=${resultText}`;
-            window.open(url, "_blank");
+            resultDiv.innerHTML += `<p>${scoreExplanation}</p>`;
+            document.getElementById("progress").style.width = `${(score / 27) * 100}%`;
         }
 
         function toggleDarkMode() {
             document.body.classList.toggle("dark-mode");
         }
 
-        function changeLanguage() {
-            const language = document.getElementById("languages").value;
-            loadQuestions(language);
+        function shareResult() {
+            const score = document.getElementById("result").innerText;
+            const tweetText = encodeURIComponent(`My PHQ-9 Depression Test result: ${score}`);
+            const url = `https://twitter.com/intent/tweet?text=${tweetText}`;
+            window.open(url, "_blank");
         }
 
-        // Initial load
-        loadQuestions();
+        function showHumanRightsExplanation() {
+            const explanationDiv = document.getElementById("humanRightsExplanation");
+            explanationDiv.style.display = explanationDiv.style.display === "none" ? "block" : "none";
+        }
+
+        renderQuestions();
     </script>
+
 </body>
 </html>
+
